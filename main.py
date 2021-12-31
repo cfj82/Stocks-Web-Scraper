@@ -1,7 +1,7 @@
 # stocks web scraper
 
-import bs4
 from bs4 import BeautifulSoup
+from datetime import datetime
 import requests
 
 """
@@ -17,15 +17,26 @@ for stock in stock_picks:
 """
 # todo add email bot
 
-# todo add date and time when scraped
+def scrape_stock():
+    search_stock = input("What is the stock ticker you would like to search?\n").upper()  # must convert to uppercase
+    # yahoo finance with {} for ticker symbol
+    # url = 'https://finance.yahoo.com/quote/FB?p=FB&ncid=stockrec'
+    url = 'https://finance.yahoo.com/quote/' + search_stock + '?p=' + search_stock + '&ncid=stockrec'
+
+    url_request = requests.get(url)
+    print(url_request)
+
+    if url_request == '404':
+        print("Failed request")
+    else:
+        soup = BeautifulSoup(url_request.text, 'html.parser')
+        # print(soup.prettify())
+        stock_name = soup.find('h1', {'class':'D(ib) Fz(18px)'}).text
+        #  print(stock_name)
+        stock_price = soup.find('fin-streamer', {'class':'Fw(b) Fz(36px) Mb(-4px) D(ib)'}).text
+        t = datetime.now()
+        time_scraped = t.strftime("%d/%m/%Y %H:%M")
+        print(stock_name + "'s Price is: $" + stock_price + " at " + time_scraped)
 
 
-url = requests.get('https://finance.yahoo.com/quote/FB?p=FB')
-soup =bs4.BeautifulSoup(url.content, 'html.parser')
-# print(soup.prettify())
-
-stock_name = soup.find('h1', {'class':'D(ib) Fz(18px)'}).text
-print(stock_name)
-
-stock_price = soup.find('fin-streamer', {'class':'Fw(b) Fz(36px) Mb(-4px) D(ib)'}).text
-print("Stock Price is: $" + stock_price)
+scrape_stock()
