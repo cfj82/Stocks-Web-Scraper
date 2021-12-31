@@ -3,6 +3,7 @@
 import bs4
 from bs4 import BeautifulSoup
 import requests
+
 """
 url = requests.get('https://www.fool.com/investing/top-stocks-to-buy/')
 soup =bs4.BeautifulSoup(url.content, 'html.parser')
@@ -14,6 +15,10 @@ for stock in stock_picks:
     stock_names.append(stock.h3.get_text())
     print(stock_names)
 """
+# todo add email bot
+
+# todo add date and time when scraped
+
 
 url = requests.get('https://finance.yahoo.com/quote/FB?p=FB')
 soup =bs4.BeautifulSoup(url.content, 'html.parser')
