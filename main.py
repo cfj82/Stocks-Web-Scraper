@@ -8,6 +8,20 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import socket
 
+# todo send email as html
+
+# example
+"""TimeNow = datetime.datetime.now()
+email_body = '<html><head></head><body>'
+email_body += '<style type="text/css"></style>'
+email_body += f'<h2>Reporting COVID-19 Cases at {time}</h2>'
+email_body += f'<h1><b>Confirmed cases</b>:  {confirmed_cases}</h1>'
+email_body += f'<h1><b>Recovered cases</b>:  {recovered_cases}</h1>'
+email_body += f'<h1><b>Deaths </b>:  {deaths}</h1>'
+email_body += '<br>Reported By'
+email_body += '<br>COVID-19 BOT</body></html>'"""
+
+
 def scrape_stock():
     search_stock = input("What is the stock ticker you would like to search?\n").upper()  # must convert to uppercase
     # yahoo finance with {} for ticker symbol
@@ -43,7 +57,7 @@ def email_bot(stock_name, result):
     message = MIMEMultipart()
     message['From'] = from_address
     message['To'] = to_address
-    message['Subject'] = "{stock_name} + 'Stock Price'"
+    message['Subject']   = "{stock_name} + 'Stock Price'"
     # body and attachments for the email
     message.attach(MIMEText(mail_content, 'plain'))
 
