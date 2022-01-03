@@ -5,21 +5,9 @@ from datetime import datetime
 import requests
 import smtplib
 from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 import socket
-
-# todo send email as html
-
-# example
-"""TimeNow = datetime.datetime.now()
-email_body = '<html><head></head><body>'
-email_body += '<style type="text/css"></style>'
-email_body += f'<h2>Reporting COVID-19 Cases at {time}</h2>'
-email_body += f'<h1><b>Confirmed cases</b>:  {confirmed_cases}</h1>'
-email_body += f'<h1><b>Recovered cases</b>:  {recovered_cases}</h1>'
-email_body += f'<h1><b>Deaths </b>:  {deaths}</h1>'
-email_body += '<br>Reported By'
-email_body += '<br>COVID-19 BOT</body></html>'"""
 
 
 def scrape_stock():
@@ -54,12 +42,31 @@ def email_bot(stock_name, result):
     mail_content = """result"""
 
     # set up MMIME
-    message = MIMEMultipart()
+    message = MIMEMultipart("alternative")
     message['From'] = from_address
     message['To'] = to_address
-    message['Subject']   = "{stock_name} + 'Stock Price'"
+    message['Subject'] = """"""+str(stock_name)+"""\'s Stock Price"""
+    filename = "document.pdf"
     # body and attachments for the email
     message.attach(MIMEText(mail_content, 'plain'))
+
+    # HTML Message
+    html = """\
+    <html>
+        <body>
+        <p><b>"""+str(stock_name)+"""</b>Stock Price:<br><br><br>
+            <b>"""+str(result)+"""</b><br><br><br><br>
+        </p>
+        <footer>
+            This price was scraped by Jun using Beautifulsoup4
+        </footer>
+        </body>
+    </html>    
+    """
+    # convert above string to MIMEText object.
+    part = MIMEText(html, "html")
+    # attach MIMEText object to MIMEMultipart object
+    message.attach(part)
 
     try:
         # create SMTP session for sending email
@@ -73,15 +80,6 @@ def email_bot(stock_name, result):
     except Exception as ex:
         print("Something went wrong" + str(ex))
 
-'''    try:
-        # send email
-        server = smtplib.SMTP_SSL("smtp.gmail.com", 465)  # stating from gmail and port 465
-        server.login(sender_address, pw)
-        server.sendmail(sender_address, email_recepients, mail_message)  # (email from, email to, email message)
-        server.close()
-        print("Email Sent Successfully!")
-    except Exception as ex:
-        print("Something went wrong" + str(ex))'''
 
 # run
 scrape_stock()
